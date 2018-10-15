@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jonchki-artifact version="1.0">
+	<info group="com.github.zeromq"
+	      module="libzmq"
+	      artifact="libzmq"
+	      version="@PROJECT_VERSION@"
+	      vcs-id="@PROJECT_VERSION_VCS@"
+	      extension="tar.xz"
+	      platform="@JONCHKI_PLATFORM@">
+		<license name="GPL-V2"/>
+		<author name="ZeroMQ team" url="http://zeromq.org" />
+		<description>Distributed messaging</description>
+	</info>
+	<dependencies>
+	</dependencies>
+</jonchki-artifact>
