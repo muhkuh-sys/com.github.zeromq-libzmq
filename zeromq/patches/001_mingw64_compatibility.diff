@@ -1,0 +1,78 @@
+diff -uNr zeromq-4.3.2/src/condition_variable.hpp zeromq-4.3.2_patched/src/condition_variable.hpp
+--- zeromq-4.3.2/src/condition_variable.hpp	2019-07-08 18:19:27.000000000 +0200
++++ zeromq-4.3.2_patched/src/condition_variable.hpp	2019-08-10 20:51:21.217243593 +0200
+@@ -35,6 +35,14 @@
+ 
+ //  Condition variable class encapsulates OS mutex in a platform-independent way.
+ 
++#if defined(__MINGW32__) || defined(__MINGW64__)
++#undef ZMQ_USE_CV_IMPL_NONE
++#define ZMQ_USE_CV_IMPL_WIN32API 1
++#undef ZMQ_USE_CV_IMPL_STL11
++#undef ZMQ_USE_CV_IMPL_VXWORKS
++#undef ZMQ_USE_CV_IMPL_PTHREADS
++#endif
++
+ #if defined(ZMQ_USE_CV_IMPL_NONE)
+ 
+ namespace zmq
+diff -uNr zeromq-4.3.2/src/thread.cpp zeromq-4.3.2_patched/src/thread.cpp
+--- zeromq-4.3.2/src/thread.cpp	2019-07-08 18:19:27.000000000 +0200
++++ zeromq-4.3.2_patched/src/thread.cpp	2019-08-10 21:02:26.054970236 +0200
+@@ -37,7 +37,7 @@
+     return _started;
+ }
+ 
+-#ifdef ZMQ_HAVE_WINDOWS
++#if defined(ZMQ_HAVE_WINDOWS) && !(defined(__MINGW32__) || defined(__MINGW64__))
+ 
+ extern "C" {
+ #if defined _WIN32_WCE
+@@ -205,12 +205,14 @@
+ #include <signal.h>
+ #include <unistd.h>
+ #include <sys/time.h>
++#if !defined(__MINGW32__) && !defined(__MINGW64__)
+ #include <sys/resource.h>
++#endif
+ 
+ extern "C" {
+ static void *thread_routine (void *arg_)
+ {
+-#if !defined ZMQ_HAVE_OPENVMS && !defined ZMQ_HAVE_ANDROID
++#if !defined(ZMQ_HAVE_OPENVMS) && !defined(ZMQ_HAVE_ANDROID) && !defined(__MINGW32__) && !defined(__MINGW64__)
+     //  Following code will guarantee more predictable latencies as it'll
+     //  disallow any signal handling in the I/O thread.
+     sigset_t signal_set;
+diff -uNr zeromq-4.3.2/src/thread.hpp zeromq-4.3.2_patched/src/thread.hpp
+--- zeromq-4.3.2/src/thread.hpp	2019-07-08 18:19:27.000000000 +0200
++++ zeromq-4.3.2_patched/src/thread.hpp	2019-08-10 21:06:27.335622748 +0200
+@@ -33,7 +33,7 @@
+ #if defined ZMQ_HAVE_VXWORKS
+ #include <vxWorks.h>
+ #include <taskLib.h>
+-#elif !defined ZMQ_HAVE_WINDOWS
++#elif !defined(ZMQ_HAVE_WINDOWS) || (defined(__MINGW32__) || defined(__MINGW64__))
+ #include <pthread.h>
+ #endif
+ #include <set>
+@@ -105,7 +105,7 @@
+   private:
+     bool _started;
+ 
+-#ifdef ZMQ_HAVE_WINDOWS
++#if defined(ZMQ_HAVE_WINDOWS) && !(defined(__MINGW32__) || defined(__MINGW64__))
+     HANDLE _descriptor;
+ #elif defined ZMQ_HAVE_VXWORKS
+     int _descriptor;
+diff -uNr zeromq-4.3.2/tests/testutil_monitoring.cpp zeromq-4.3.2_patched/tests/testutil_monitoring.cpp
+--- zeromq-4.3.2/tests/testutil_monitoring.cpp	2019-07-08 18:19:27.000000000 +0200
++++ zeromq-4.3.2_patched/tests/testutil_monitoring.cpp	2019-08-10 18:50:35.999681614 +0200
+@@ -26,6 +26,7 @@
+     You should have received a copy of the GNU Lesser General Public License
+     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
++#define __USE_MINGW_ANSI_STDIO 1
+ #include "testutil_monitoring.hpp"
+ #include "testutil_unity.hpp"
+ 
