@@ -59,7 +59,7 @@ BUILD_DIR=${PRJ_DIR}/build/${TARGET}
 mkdir -p ${BUILD_DIR}
 
 
-# Build openocd.
+# Build zeromq.
 pushd ${BUILD_DIR}
 PATH=${TOOLS_PATH} cmake -DCMAKE_INSTALL_PREFIX="" ${CMAKE_CROSS_COMPILER} ${CMAKE_PLATFORM} ${CMAKE_MODULES} ${PRJ_DIR}
 PATH=${TOOLS_PATH} make pack
