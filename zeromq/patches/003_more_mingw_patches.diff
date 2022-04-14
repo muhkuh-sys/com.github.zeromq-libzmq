@@ -1,0 +1,39 @@
+diff -uNr zeromq-4.3.4/tests/test_heartbeats.cpp zeromq-4.3.4_patched/tests/test_heartbeats.cpp
+--- zeromq-4.3.4/tests/test_heartbeats.cpp	2021-01-03 22:46:02.000000000 +0100
++++ zeromq-4.3.4_patched/tests/test_heartbeats.cpp	2022-04-14 17:33:02.686610595 +0200
+@@ -22,7 +22,9 @@
+ #include <winsock2.h>
+ #include <ws2tcpip.h>
+ #include <stdexcept>
++#if !(defined(__MINGW32__) || defined(__MINGW64__))
+ #define close closesocket
++#endif
+ typedef SOCKET raw_socket;
+ #else
+ #include <arpa/inet.h>
+diff -uNr zeromq-4.3.4/tests/test_security_null.cpp zeromq-4.3.4_patched/tests/test_security_null.cpp
+--- zeromq-4.3.4/tests/test_security_null.cpp	2021-01-03 22:46:02.000000000 +0100
++++ zeromq-4.3.4_patched/tests/test_security_null.cpp	2022-04-14 17:33:14.386611675 +0200
+@@ -34,7 +34,9 @@
+ #include <winsock2.h>
+ #include <ws2tcpip.h>
+ #include <stdexcept>
++#if !(defined(__MINGW32__) || defined(__MINGW64__))
+ #define close closesocket
++#endif
+ #else
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+diff -uNr zeromq-4.3.4/tests/testutil.hpp zeromq-4.3.4_patched/tests/testutil.hpp
+--- zeromq-4.3.4/tests/testutil.hpp	2021-01-03 22:46:02.000000000 +0100
++++ zeromq-4.3.4_patched/tests/testutil.hpp	2022-04-14 17:32:45.410609001 +0200
+@@ -102,7 +102,9 @@
+ #include <winsock2.h>
+ #include <ws2tcpip.h>
+ #include <stdexcept>
++#if !(defined(__MINGW32__) || defined(__MINGW64__))
+ #define close closesocket
++#endif
+ typedef int socket_size_t;
+ inline const char *as_setsockopt_opt_t (const void *opt)
+ {
