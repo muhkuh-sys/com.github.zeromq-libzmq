@@ -39,7 +39,7 @@ ExternalProject_Add(TARGET_zeromq
                     URL ${CMAKE_CURRENT_SOURCE_DIR}/zeromq-${VERSION_EXTERNAL}.tar.gz
                     URL_HASH SHA1=47277a64749049123d1401600e8cfbab10a3ae28
                     PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/zeromq-${VERSION_EXTERNAL}/src/TARGET_zeromq --patch-folder ${CMAKE_CURRENT_SOURCE_DIR}/patches --strip 1
-                    CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/zeromq-${VERSION_EXTERNAL}/src/TARGET_zeromq/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --without-docs --with-pic ${CONFIGURE_HOST}
+                    CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/zeromq-${VERSION_EXTERNAL}/src/TARGET_zeromq/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --enable-ws --without-docs --with-pic ${CONFIGURE_HOST}
                     INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install
 )
 
