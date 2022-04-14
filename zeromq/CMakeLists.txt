@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
 
-SET(VERSION_EXTERNAL "4.3.2")
-SET(VERSION_PACKAGE "2")
+SET(VERSION_EXTERNAL "4.3.4")
+SET(VERSION_PACKAGE "1")
 
 PROJECT("libzmq")
 
@@ -37,7 +37,7 @@ ENDIF(${CMAKE_CROSSCOMPILING})
 ExternalProject_Add(TARGET_zeromq
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/zeromq-${VERSION_EXTERNAL}
                     URL ${CMAKE_CURRENT_SOURCE_DIR}/zeromq-${VERSION_EXTERNAL}.tar.gz
-                    URL_HASH SHA1=e5253bff214f77621b3d29443f1aa6e5a106ffe5
+                    URL_HASH SHA1=47277a64749049123d1401600e8cfbab10a3ae28
                     PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/zeromq-${VERSION_EXTERNAL}/src/TARGET_zeromq --patch-folder ${CMAKE_CURRENT_SOURCE_DIR}/patches --strip 1
                     CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/zeromq-${VERSION_EXTERNAL}/src/TARGET_zeromq/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --with-pic ${CONFIGURE_HOST}
                     INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install
