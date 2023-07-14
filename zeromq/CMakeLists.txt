@@ -38,7 +38,6 @@ ExternalProject_Add(TARGET_zeromq
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/zeromq-${VERSION_EXTERNAL}
                     URL ${CMAKE_CURRENT_SOURCE_DIR}/zeromq-${VERSION_EXTERNAL}.tar.gz
                     URL_HASH SHA1=47277a64749049123d1401600e8cfbab10a3ae28
-                    PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/zeromq-${VERSION_EXTERNAL}/src/TARGET_zeromq --patch-folder ${CMAKE_CURRENT_SOURCE_DIR}/patches --strip 1
                     CONFIGURE_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/zeromq-${VERSION_EXTERNAL}/src/TARGET_zeromq/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --enable-static=yes --enable-shared=no --enable-ws --without-docs --with-pic ${CONFIGURE_HOST}
                     INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install
 )
@@ -55,19 +54,11 @@ SET(CPACK_PACKAGE_FILE_NAME "libzmq-${PROJECT_VERSION}-${JONCHKI_PLATFORM}")
 SET(CPACK_GENERATOR "TXZ")
 INCLUDE(CPack)
 
-IF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
-	# Package a windows build.
+# Package a linux build.
 
-	CONFIGURE_FILE(installer/install_windows.lua
-	               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-	               @ONLY)
-ELSE(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
-	# Package a linux build.
-
-	CONFIGURE_FILE(installer/install_linux.lua
-	               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-	               @ONLY)
-ENDIF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
+CONFIGURE_FILE(installer/install_linux.lua
+               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+               @ONLY)
 
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
         DESTINATION .)

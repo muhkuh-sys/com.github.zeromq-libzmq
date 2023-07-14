@@ -1,9 +1,6 @@
-#! /usr/bin/python2.7
+#! /usr/bin/python3
 
 from jonchki import cli_args
-from jonchki import install
-from jonchki import jonchkihere
-from jonchki import vcs_id
 
 import glob
 import os
@@ -28,42 +25,6 @@ strCfg_workingFolder = os.path.join(
     strCfg_projectFolder,
     'build',
     tPlatform['platform_id']
-)
-
-# Where is the jonchkihere tool?
-strCfg_jonchkiHerePath = os.path.join(
-    strCfg_projectFolder,
-    'jonchki'
-)
-# This is the Jonchki version to use.
-strCfg_jonchkiVersion = '0.0.7.1'
-# Look in this folder for Jonchki archives before downloading them.
-strCfg_jonchkiLocalArchives = os.path.join(
-    strCfg_projectFolder,
-    'jonchki',
-    'local_archives'
-)
-# The target folder for the jonchki installation. A subfolder named
-# "jonchki-VERSION" will be created there. "VERSION" will be replaced with
-# the version number from strCfg_jonchkiVersion.
-strCfg_jonchkiInstallationFolder = os.path.join(
-    strCfg_projectFolder,
-    'build'
-)
-
-# Select the verbose level for jonchki.
-# Possible values are "debug", "info", "warning", "error" and "fatal".
-strCfg_jonchkiVerbose = 'info'
-
-strCfg_jonchkiSystemConfiguration = os.path.join(
-    strCfg_projectFolder,
-    'jonchki',
-    'jonchkisys.cfg'
-)
-strCfg_jonchkiProjectConfiguration = os.path.join(
-    strCfg_projectFolder,
-    'jonchki',
-    'jonchkicfg.xml'
 )
 
 # -
@@ -133,46 +94,6 @@ if tPlatform['host_distribution_id'] == 'ubuntu':
         else:
             raise Exception('Unknown CPU architecture: "%s"' % tPlatform['cpu_architecture'])
 
-    elif tPlatform['distribution_id'] == 'windows':
-        # Cross build on linux for windows.
-
-        if tPlatform['cpu_architecture'] == 'x86':
-            # Build for 32bit windows.
-            astrCMAKE_COMPILER = [
-                '-DCMAKE_TOOLCHAIN_FILE=%s/cmake/toolchainfiles/toolchain_windows_32.cmake' % strCfg_projectFolder
-            ]
-            astrCMAKE_PLATFORM = [
-                '-DJONCHKI_PLATFORM_DIST_ID=windows',
-                '-DJONCHKI_PLATFORM_DIST_VERSION=""',
-                '-DJONCHKI_PLATFORM_CPU_ARCH=x86'
-            ]
-            astrJONCHKI_SYSTEM = [
-                '--distribution-id windows',
-                '--empty-distribution-version',
-                '--cpu-architecture x86'
-            ]
-            strMake = 'make'
-
-        elif tPlatform['cpu_architecture'] == 'x86_64':
-            # Build for 64bit windows.
-            astrCMAKE_COMPILER = [
-                '-DCMAKE_TOOLCHAIN_FILE=%s/cmake/toolchainfiles/toolchain_windows_64.cmake' % strCfg_projectFolder
-            ]
-            astrCMAKE_PLATFORM = [
-                '-DJONCHKI_PLATFORM_DIST_ID=windows',
-                '-DJONCHKI_PLATFORM_DIST_VERSION=""',
-                '-DJONCHKI_PLATFORM_CPU_ARCH=x86_64'
-            ]
-            astrJONCHKI_SYSTEM = [
-                '--distribution-id windows',
-                '--empty-distribution-version',
-                '--cpu-architecture x86_64'
-            ]
-            strMake = 'make'
-
-        else:
-            raise Exception('Unknown CPU architecture: "%s"' % tPlatform['cpu_architecture'])
-
     else:
         raise Exception('Unknown distribution: "%s"' % tPlatform['distribution_id'])
 
@@ -189,12 +110,6 @@ astrFolders = [
 for strPath in astrFolders:
     if os.path.exists(strPath) is not True:
         os.makedirs(strPath)
-
-# Try to get the VCS ID.
-strProjectVersionVcs, strProjectVersionVcsLong = vcs_id.get(
-    strCfg_projectFolder
-)
-print(strProjectVersionVcs, strProjectVersionVcsLong)
 
 
 # ---------------------------------------------------------------------------
